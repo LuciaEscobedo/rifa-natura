@@ -1,0 +1,94 @@
+{
+  "titulo": "Rifa Natura",
+  "tituloDestacado": "de fin de año",
+  "bajada": "Cinco regalos, cinco ganadores. Elegí tu número, pagá con Mercado Pago y seguí el sorteo en el canal.",
+  "tituloPestania": "Rifa Natura de fin de año",
+  "organiza": "Natura Cosméticos Digital",
+  "backendUrl": "",
+
+  "presentacion": {
+    "nombre": "Luchy",
+    "saludo": "¡Hola! Soy Luchy, tu consultora Natura Digital.",
+    "texto": "Armé esta rifa para despedir el año con regalos lindos. ¡Gracias por sumarte!"
+  },
+
+  "canal": {
+    "nombre": "Natura Cosméticos Digital",
+    "url": "https://whatsapp.com/channel/0029VbCYpVV7YSd0DuBSCu1T",
+    "texto": "Por el canal vamos a ir contando cuántos números quedan, la fecha del sorteo y los ganadores."
+  },
+
+  "sorteo": {
+    "resumen": "Se juega con la Quiniela Nacional Nocturna del día hábil siguiente al cierre de la rifa.",
+    "detalle": "Ganan las dos últimas cifras de los primeros puestos de la Quiniela Nacional Nocturna del día hábil siguiente al cierre: el 1° puesto (la cabeza) se lleva el 1er premio, el 2° puesto el 2do premio, y así hasta el 5°. Si un número se repite o no fue vendido, pasa al puesto siguiente."
+  },
+
+  "numeros": { "desde": 0, "hasta": 99, "digitos": 2, "columnas": 10 },
+
+  "precios": {
+    "unitario": 2500,
+    "packs": [{ "cantidad": 3, "precio": 6500 }],
+    "moneda": "ARS",
+    "tituloPago": "Rifa Natura de fin de año"
+  },
+
+  "premios": [
+    {
+      "puesto": 1,
+      "linea": "Natura Humor",
+      "nombre": "Humor Liberta",
+      "detalle": ["Eau de toilette 75 ml", "Crema corporal iluminadora 200 g"],
+      "valor": 55900,
+      "imagen": "img/premio2-humor-liberta.jpg",
+      "encuadre": "55% 74%",
+      "zoom": 1.2
+    },
+    {
+      "puesto": 2,
+      "linea": "Natura Humor",
+      "nombre": "Humor Primeiro",
+      "detalle": ["Eau de toilette 75 ml", "Spray corporal perfumado 100 ml", "Bolsa de regalo"],
+      "valor": 51700,
+      "imagen": "img/premio1-humor-primeiro.jpg",
+      "encuadre": "45% 80%",
+      "zoom": 1.3
+    },
+    {
+      "puesto": 3,
+      "linea": "Natura Tododia",
+      "nombre": "Flor de Durazno y Jazmín",
+      "detalle": ["Crema para cuerpo"],
+      "valor": 22400,
+      "imagen": "img/premio4-tododia-flor-de-durazno.webp",
+      "encuadre": "50% 50%"
+    },
+    {
+      "puesto": 4,
+      "linea": "Natura Kaiak",
+      "nombre": "Kaiak Clásico Femenino",
+      "detalle": ["Eau de toilette 25 ml", "Jabón en barra 90 g"],
+      "valor": 22300,
+      "imagen": "img/premio3-kaiak.jpg",
+      "encuadre": "50% 62%",
+      "zoom": 1.35
+    },
+    {
+      "puesto": 5,
+      "linea": "Natura Tododia",
+      "nombre": "Jabones surtidos",
+      "detalle": ["Caja de regalo con 5 jabones de 90 g"],
+      "valor": 13000,
+      "imagen": "img/premio5-tododia-jabones.jpg",
+      "encuadre": "50% 92%",
+      "zoom": 1.3
+    }
+  ],
+
+  "textos": {
+    "exitoTitulo": "¡Ya estás participando!",
+    "exitoTexto": "Tus números {nums} quedaron registrados. Seguí el canal para enterarte del sorteo.",
+    "pagoFallido": "El pago no se completó. Tus números quedaron libres de nuevo.",
+    "pagoPendiente": "Tu pago está pendiente. Te avisamos por WhatsApp cuando se acredite.",
+    "aclaracion": "Rifa organizada por una consultora independiente. No es una promoción oficial de Natura Cosméticos."
+  }
+}

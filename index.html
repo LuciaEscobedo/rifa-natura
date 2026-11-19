@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rifa Natura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+<!--
+  Rifa Natura. Los textos, premios, precios y el link del canal viven en config.json.
+  Basado en el motor de rifa-template, con estética propia y campo de teléfono.
+-->
+<style>
+:root {
+  --crema: #fbf5ee;
+  --arena: #f4e6d8;
+  --arena-2: #ecd6c2;
+  --naranja: #e4682f;
+  --naranja-hondo: #c4501f;
+  --ciruela: #3b1d24;
+  --ciruela-2: #5a2f39;
+  --oro: #c99a3c;
+  --texto: #2a1a1d;
+  --suave: #7b6560;
+  --linea: #e7d3c1;
+  --blanco: #fffdfa;
+  --serif: 'Fraunces', Georgia, serif;
+  --sans: 'DM Sans', 'Segoe UI', sans-serif;
+  --radio: 18px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--crema);
+  color: var(--texto);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: -1;
+  background:
+    radial-gradient(60vw 50vw at 95% -5%, rgba(228,104,47,0.13), transparent 60%),
+    radial-gradient(50vw 45vw at -10% 35%, rgba(201,154,60,0.10), transparent 60%),
+    radial-gradient(55vw 50vw at 110% 85%, rgba(59,29,36,0.06), transparent 60%);
+}
+
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+/* ---------- Hero ---------- */
+.hero { padding: 56px 0 40px; }
+.hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
+
+.ceja {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--naranja-hondo);
+}
+.ceja::before { content: ''; width: 28px; height: 1.5px; background: currentColor; }
+
+.hero h1 {
+  font-family: var(--serif); font-weight: 600;
+  font-size: clamp(2.9rem, 7vw, 5rem); line-height: 0.98; letter-spacing: -0.02em;
+  color: var(--ciruela); margin: 18px 0 18px;
+}
+.hero h1 em { display: block; font-style: italic; font-weight: 400; color: var(--naranja); }
+
+.bajada { font-size: 1.1rem; color: var(--suave); max-width: 30ch; margin-bottom: 26px; }
+
+.precios { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px; }
+.precio-chip {
+  background: var(--blanco); border: 1px solid var(--linea); border-radius: 999px;
+  padding: 9px 16px; font-size: 0.92rem; color: var(--suave);
+}
+.precio-chip strong { color: var(--ciruela); font-weight: 700; }
+.precio-chip.destacado { background: var(--ciruela); border-color: var(--ciruela); color: #e9d7cf; }
+.precio-chip.destacado strong { color: #fff; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font: 700 1rem var(--sans); text-decoration: none; cursor: pointer;
+  border: none; border-radius: 999px; padding: 15px 28px;
+  transition: transform .15s, background .2s, box-shadow .2s;
+}
+.btn-primario { background: var(--naranja); color: #fff; box-shadow: 0 8px 24px -10px rgba(196,80,31,0.7); }
+.btn-primario:hover { background: var(--naranja-hondo); transform: translateY(-1px); }
+
+.hero-visual { position: relative; justify-self: center; width: 100%; max-width: 380px; }
+.arco {
+  aspect-ratio: 4 / 5; border-radius: 999px 999px 24px 24px; overflow: hidden;
+  background: var(--arena); box-shadow: 0 30px 60px -30px rgba(59,29,36,0.45);
+}
+.arco img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sello {
+  position: absolute; left: -26px; bottom: 34px;
+  width: 116px; height: 116px; border-radius: 50%;
+  background: var(--ciruela); color: #fff; text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  transform: rotate(-8deg); box-shadow: 0 14px 30px -12px rgba(59,29,36,0.6);
+}
+.sello b { font-family: var(--serif); font-size: 2.3rem; line-height: 1; font-weight: 600; }
+.sello span { font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; opacity: .85; margin-top: 4px; }
+
+.presentacion {
+  display: flex; align-items: center; gap: 14px; max-width: 440px;
+  background: var(--blanco); border: 1px solid var(--linea); border-radius: 18px;
+  padding: 12px 16px 12px 12px; margin-bottom: 24px;
+}
+.avatar {
+  flex: none; width: 48px; height: 48px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--naranja), var(--oro)); color: #fff;
+  font-family: var(--serif); font-style: italic; font-size: 1.5rem; font-weight: 600;
+}
+.pres-saludo { font-weight: 700; color: var(--ciruela); font-size: 0.95rem; line-height: 1.3; }
+.pres-texto { font-size: 0.85rem; color: var(--suave); line-height: 1.4; margin-top: 2px; }
+
+/* ---------- Secciones ---------- */
+section { padding: 40px 0; }
+.titulo-seccion {
+  font-family: var(--serif); font-weight: 600; color: var(--ciruela);
+  font-size: clamp(1.9rem, 4vw, 2.6rem); letter-spacing: -0.01em; line-height: 1.1;
+}
+.titulo-seccion em { font-style: italic; font-weight: 400; color: var(--naranja); }
+.sub-seccion { color: var(--suave); margin-top: 8px; margin-bottom: 28px; }
+
+/* ---------- Premios ---------- */
+.premios { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+.premio {
+  background: var(--blanco); border: 1px solid var(--linea); border-radius: var(--radio);
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: transform .2s, box-shadow .2s;
+}
+.premio:hover { transform: translateY(-3px); box-shadow: 0 22px 40px -28px rgba(59,29,36,0.5); }
+
+.premio-foto { position: relative; aspect-ratio: 1; background: var(--arena); overflow: hidden; }
+.premio-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.puesto {
+  position: absolute; top: 12px; left: 12px;
+  background: var(--blanco); color: var(--ciruela);
+  border-radius: 999px; padding: 5px 12px 5px 6px;
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  box-shadow: 0 4px 14px -6px rgba(59,29,36,0.4);
+}
+.puesto i {
+  font-style: normal; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; font-family: var(--serif); font-size: 0.85rem;
+  background: var(--arena-2); color: var(--ciruela);
+}
+.premio[data-puesto="1"] .puesto i { background: var(--oro); color: #fff; }
+.premio[data-puesto="2"] .puesto i { background: #b9a9a0; color: #fff; }
+.premio[data-puesto="3"] .puesto i { background: #b9784c; color: #fff; }
+
+.premio-info { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.premio-linea { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--naranja-hondo); }
+.premio-nombre { font-family: var(--serif); font-size: 1.3rem; font-weight: 600; color: var(--ciruela); line-height: 1.15; }
+.premio-detalle { list-style: none; font-size: 0.86rem; color: var(--suave); margin-top: 4px; }
+.premio-detalle li::before { content: '· '; color: var(--naranja); font-weight: 700; }
+.premio-valor { margin-top: auto; padding-top: 10px; font-size: 0.8rem; color: var(--suave); }
+.premio-valor b { color: var(--ciruela); }
+
+/* 1er premio destacado */
+.premio[data-puesto="1"] { grid-column: span 2; grid-row: span 2; }
+.premio[data-puesto="1"] .premio-foto { aspect-ratio: auto; flex: 1; min-height: 340px; }
+.premio[data-puesto="1"] .premio-nombre { font-size: 2rem; }
+.premio[data-puesto="1"] .premio-info { padding: 20px 24px 24px; flex: none; }
+
+.foto-pendiente {
+  width: 100%; height: 100%; display: grid; place-items: center; text-align: center;
+  background: radial-gradient(circle at 50% 40%, #fbe0d4 0%, #f5cdbb 45%, #efc0a8 100%);
+  color: var(--ciruela-2); font-size: 0.78rem; font-weight: 500;
+}
+.foto-pendiente svg { width: 76px; height: 76px; display: block; margin: 0 auto 8px; }
+
+/* ---------- Pasos + canal ---------- */
+.pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.paso { padding: 22px; border-top: 1.5px solid var(--ciruela); }
+.paso-num { font-family: var(--serif); font-style: italic; font-size: 2.2rem; color: var(--naranja); line-height: 1; }
+.paso h3 { font-size: 1.05rem; color: var(--ciruela); margin: 10px 0 6px; }
+.paso p { font-size: 0.92rem; color: var(--suave); }
+
+.canal {
+  margin-top: 28px; background: var(--ciruela); color: #f1e4dc;
+  border-radius: 24px; padding: 30px 32px;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.canal::after {
+  content: ''; position: absolute; right: -60px; top: -60px; width: 220px; height: 220px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(228,104,47,0.45), transparent 70%);
+}
+.canal-icono {
+  width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.08);
+  display: grid; place-items: center; color: #ffb48d;
+}
+.canal-icono svg { width: 28px; height: 28px; }
+.canal h3 { font-family: var(--serif); font-weight: 600; font-size: 1.4rem; color: #fff; }
+.canal p { font-size: 0.93rem; opacity: 0.85; margin-top: 4px; max-width: 52ch; }
+.canal .btn { background: var(--crema); color: var(--ciruela); position: relative; z-index: 1; white-space: nowrap; }
+.canal .btn:hover { background: #fff; transform: translateY(-1px); }
+
+/* ---------- Números ---------- */
+.numeros-layout { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 28px; align-items: start; }
+
+.tablero { background: var(--blanco); border: 1px solid var(--linea); border-radius: 24px; padding: 22px; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 16px; font-size: 0.82rem; color: var(--suave); }
+.leyenda span { display: inline-flex; align-items: center; gap: 7px; }
+.leyenda i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+.grilla { display: grid; grid-template-columns: repeat(var(--cols, 10), 1fr); gap: 6px; }
+
+.num {
+  aspect-ratio: 1; border-radius: 50%; border: 1.5px solid var(--linea);
+  background: var(--crema); color: var(--ciruela);
+  font: 600 clamp(0.7rem, 1.8vw, 0.92rem) var(--sans); font-variant-numeric: tabular-nums;
+  cursor: pointer; transition: transform .12s, background .15s, border-color .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.num:hover:not(:disabled) { border-color: var(--naranja); transform: scale(1.08); }
+.num.sel { background: var(--naranja); border-color: var(--naranja); color: #fff; }
+.num.reservado { background: #f6dfae; border-color: #e7c27a; color: #8a6420; cursor: not-allowed; }
+.num.vendido { background: var(--ciruela); border-color: var(--ciruela); color: rgba(255,255,255,0.45); cursor: not-allowed; }
+
+.lb-libre { background: var(--crema); border: 1.5px solid var(--linea); }
+.lb-sel { background: var(--naranja); }
+.lb-res { background: #f6dfae; border: 1.5px solid #e7c27a; }
+.lb-ven { background: var(--ciruela); }
+
+.loader { text-align: center; padding: 48px 0; color: var(--suave); font-size: 0.9rem; }
+.spinner { width: 32px; height: 32px; border: 3px solid var(--arena); border-top-color: var(--naranja); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.panel { position: sticky; top: 20px; background: var(--blanco); border: 1px solid var(--linea); border-radius: 24px; padding: 24px; }
+.panel h3 { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--ciruela); }
+.seleccion { margin: 14px 0 18px; padding: 14px 16px; background: var(--crema); border-radius: 14px; }
+.seleccion-vacia { font-size: 0.88rem; color: var(--suave); }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.tag { background: var(--naranja); color: #fff; border-radius: 999px; padding: 3px 11px; font-weight: 700; font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.total { display: flex; justify-content: space-between; align-items: baseline; }
+.total span { font-size: 0.85rem; color: var(--suave); }
+.total b { font-family: var(--serif); font-size: 1.8rem; color: var(--ciruela); font-weight: 600; }
+.ahorro { font-size: 0.78rem; color: var(--naranja-hondo); font-weight: 500; text-align: right; }
+
+.campo { margin-bottom: 14px; }
+.campo label { display: block; font-size: 0.78rem; font-weight: 700; color: var(--ciruela); margin-bottom: 6px; }
+.campo input {
+  width: 100%; font: 400 1rem var(--sans); color: var(--texto);
+  background: var(--crema); border: 1.5px solid var(--linea); border-radius: 12px; padding: 12px 14px;
+  outline: none; transition: border-color .15s, background .15s;
+}
+.campo input:focus { border-color: var(--naranja); background: #fff; }
+.campo input::placeholder { color: #b9a59c; }
+.campo small { display: block; font-size: 0.76rem; color: var(--suave); margin-top: 5px; }
+
+.btn-pagar { width: 100%; background: #009ee3; color: #fff; margin-top: 4px; }
+.btn-pagar:hover:not(:disabled) { background: #0089c6; }
+.btn-pagar:disabled { background: var(--arena-2); color: #a48d82; cursor: not-allowed; box-shadow: none; }
+.mp { background: #fff; color: #009ee3; font-weight: 900; font-size: 0.8rem; padding: 2px 6px; border-radius: 4px; }
+.btn-pagar:disabled .mp { color: #a48d82; }
+.btn-limpiar { width: 100%; background: none; border: none; color: var(--suave); font: 500 0.85rem var(--sans); padding: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+.aviso-demo {
+  margin: 0 auto 20px; max-width: 1000px; padding: 10px 16px; border-radius: 12px; text-align: center;
+  font-size: 0.85rem; color: #8a6420; background: #fbefd2; border: 1px dashed #e0b562;
+}
+
+/* Barra móvil */
+.barra {
+  position: fixed; left: 12px; right: 12px; bottom: 12px; z-index: 50;
+  background: var(--ciruela); color: #fff; border-radius: 18px; padding: 12px 12px 12px 18px;
+  display: none; align-items: center; justify-content: space-between; gap: 12px;
+  box-shadow: 0 18px 40px -16px rgba(59,29,36,0.7);
+}
+.barra.visible { display: flex; }
+.barra small { display: block; font-size: 0.75rem; opacity: .75; }
+.barra b { font-family: var(--serif); font-size: 1.25rem; font-weight: 600; }
+.barra .btn { padding: 11px 18px; font-size: 0.9rem; }
+
+/* Footer */
+footer { padding: 40px 0 120px; text-align: center; color: var(--suave); font-size: 0.82rem; border-top: 1px solid var(--linea); margin-top: 32px; }
+footer p + p { margin-top: 6px; }
+
+/* Toast + modal */
+.toast {
+  position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 140px); z-index: 300;
+  background: var(--ciruela); color: #fff; border-radius: 14px; padding: 12px 20px; font-size: 0.9rem;
+  max-width: 90vw; text-align: center; transition: transform .3s; box-shadow: 0 12px 30px -12px rgba(0,0,0,.5);
+}
+.toast.show { transform: translate(-50%, 0); }
+.toast.error { background: #a5321a; }
+.toast.warning { background: #8a6420; }
+
+#modal { position: fixed; inset: 0; z-index: 200; background: rgba(42,26,29,0.6); display: none; align-items: center; justify-content: center; padding: 20px; }
+#modal.visible { display: flex; }
+.modal-caja { background: var(--blanco); border-radius: 24px; padding: 32px 26px; max-width: 400px; width: 100%; text-align: center; }
+.modal-caja h2 { font-family: var(--serif); color: var(--ciruela); font-size: 1.7rem; margin-bottom: 8px; }
+.modal-caja p { color: var(--suave); margin-bottom: 22px; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .premios { grid-template-columns: repeat(2, 1fr); }
+  .premio[data-puesto="1"] { grid-column: span 2; grid-row: auto; }
+  .premio[data-puesto="1"] .premio-foto { min-height: 0; aspect-ratio: 4 / 3; flex: none; }
+  .numeros-layout { grid-template-columns: 1fr; }
+  .panel { position: static; }
+}
+
+@media (max-width: 720px) {
+  .wrap { padding: 0 16px; }
+  .hero { padding: 32px 0 16px; }
+  .hero .wrap { grid-template-columns: 1fr; gap: 32px; }
+  .hero-visual { max-width: 300px; }
+  .sello { left: -14px; width: 96px; height: 96px; }
+  .sello b { font-size: 1.9rem; }
+  .bajada { max-width: none; }
+  .pasos { grid-template-columns: 1fr; gap: 4px; }
+  .paso { padding: 18px 4px; }
+  .canal { grid-template-columns: 1fr; padding: 26px 22px; gap: 14px; }
+  .canal .btn { width: 100%; }
+  .tablero, .panel { padding: 16px; border-radius: 20px; }
+  .grilla { gap: 4px; }
+  .premio-info { padding: 12px 14px 14px; }
+  .premio-nombre { font-size: 1.08rem; }
+  .premio[data-puesto="1"] .premio-nombre { font-size: 1.6rem; }
+  .premio-detalle { font-size: 0.8rem; }
+  .puesto { top: 8px; left: 8px; font-size: 0.72rem; }
+}
+
+@media (min-width: 901px) { .barra { display: none !important; } }
+</style>
+</head>
+<body>
+
+<div id="app" hidden>
+
+  <header class="hero">
+    <div class="wrap">
+      <div>
+        <span class="ceja" id="ceja">100 números · 5 ganadores</span>
+        <h1><span id="titulo"></span><em id="titulo-destacado"></em></h1>
+        <p class="bajada" id="bajada"></p>
+        <div class="presentacion" id="presentacion" hidden>
+          <span class="avatar" id="pres-avatar"></span>
+          <div><p class="pres-saludo" id="pres-saludo"></p><p class="pres-texto" id="pres-texto"></p></div>
+        </div>
+        <div class="precios" id="precios"></div>
+        <a class="btn btn-primario" href="#numeros">Elegir mis números
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10m0 0 4-4m-4 4-4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="hero-visual">
+        <div class="arco"><img id="hero-img" alt=""></div>
+        <div class="sello"><b id="sello-num">5</b><span>premios</span></div>
+      </div>
+    </div>
+  </header>
+
+  <section id="premios-section">
+    <div class="wrap">
+      <h2 class="titulo-seccion">Los <em>premios</em></h2>
+      <p class="sub-seccion" id="premios-sub"></p>
+      <div class="premios" id="premios"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2 class="titulo-seccion">Cómo <em>participar</em></h2>
+      <p class="sub-seccion" id="sorteo-fecha"></p>
+      <div class="pasos">
+        <div class="paso"><div class="paso-num">01</div><h3>Elegí tus números</h3><p>Tocá los que quieras en el tablero. Si llevás 3, pagás menos.</p></div>
+        <div class="paso"><div class="paso-num">02</div><h3>Completá y pagá</h3><p>Nombre, Instagram y WhatsApp. El pago es con Mercado Pago, en un solo paso.</p></div>
+        <div class="paso"><div class="paso-num">03</div><h3>Seguí el sorteo</h3><p>Sale por la Quiniela Nacional Nocturna. Avisamos todo por el canal y a los ganadores les escribimos por WhatsApp para coordinar la entrega.</p></div>
+      </div>
+
+      <div class="canal" id="canal">
+        <div class="canal-icono">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h3 id="canal-nombre"></h3>
+          <p id="canal-texto"></p>
+        </div>
+        <a class="btn" id="canal-link" target="_blank" rel="noopener">Seguir el canal</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="numeros">
+    <div class="aviso-demo" id="aviso-demo" hidden>Vista previa: todavía no está conectado el backend. Los números son de muestra y no se puede pagar.</div>
+    <div class="wrap">
+      <h2 class="titulo-seccion">Elegí tus <em>números</em></h2>
+      <p class="sub-seccion" id="numeros-sub"></p>
+
+      <div class="numeros-layout">
+        <div class="tablero">
+          <div class="leyenda">
+            <span><i class="lb-libre"></i>Libre</span>
+            <span><i class="lb-sel"></i>Tu selección</span>
+            <span><i class="lb-res"></i>Reservado</span>
+            <span><i class="lb-ven"></i>Vendido</span>
+          </div>
+          <div class="loader" id="loader"><div class="spinner"></div>Cargando números…</div>
+          <div class="grilla" id="grilla" hidden></div>
+        </div>
+
+        <div class="panel" id="panel">
+          <h3>Tus datos</h3>
+          <div class="seleccion">
+            <p class="seleccion-vacia" id="seleccion-vacia">Todavía no elegiste ningún número.</p>
+            <div id="seleccion-llena" hidden>
+              <div class="tags" id="tags"></div>
+              <div class="total"><span>Total</span><b id="total">$0</b></div>
+              <p class="ahorro" id="ahorro"></p>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="in-nombre">Nombre y apellido</label>
+            <input id="in-nombre" type="text" maxlength="60" autocomplete="name" placeholder="Ej: Valentina García">
+          </div>
+          <div class="campo">
+            <label for="in-instagram">Instagram</label>
+            <input id="in-instagram" type="text" maxlength="40" autocomplete="off" placeholder="@tu_usuario">
+          </div>
+          <div class="campo">
+            <label for="in-telefono">WhatsApp</label>
+            <input id="in-telefono" type="tel" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="Ej: 11 2345 6789">
+            <small>Lo usamos solo para coordinar la entrega si ganás.</small>
+          </div>
+
+          <button class="btn btn-pagar" id="btn-pagar" disabled onclick="iniciarPago()"><span class="mp">MP</span> Pagar con Mercado Pago</button>
+          <button class="btn-limpiar" onclick="limpiarSeleccion()">Limpiar selección</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <p id="footer-org"></p>
+      <p id="footer-aclaracion"></p>
+      <p>Pagos procesados por Mercado Pago · Argentina</p>
+    </div>
+  </footer>
+</div>
+
+<div class="barra" id="barra">
+  <div><small id="barra-cant"></small><b id="barra-total"></b></div>
+  <a class="btn btn-primario" href="#panel">Completar datos</a>
+</div>
+
+<div id="modal">
+  <div class="modal-caja">
+    <h2 id="modal-titulo"></h2>
+    <p id="modal-texto"></p>
+    <button class="btn btn-primario" onclick="$('modal').classList.remove('visible')">Volver a la rifa</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let CFG = null;
+let seleccion = [];
+let estados = new Map();   // numero -> 'libre' | 'reservado' | 'vendido'
+let modoDemo = false;
+const $ = id => document.getElementById(id);
+
+const FLOR_SVG = `<svg viewBox="0 0 80 80" aria-hidden="true">
+  ${[0,72,144,216,288].map(r => `<ellipse cx="40" cy="22" rx="11" ry="17" fill="#fff" opacity=".7" transform="rotate(${r} 40 40)"/>`).join('')}
+  <circle cx="40" cy="40" r="8" fill="#e4682f"/></svg>`;
+
+// ---------- Config ----------
+async function cargarConfig() {
+  const res = await fetch('config.json', { cache: 'no-store' });
+  if (!res.ok) throw new Error('No se pudo leer config.json (' + res.status + ')');
+  return res.json();
+}
+
+function formatPrecio(n) { return '$' + Number(n).toLocaleString('es-AR'); }
+function fmtNum(n) { return String(n).padStart(CFG.numeros.digitos || 0, '0'); }
+
+function calcularPrecio(cant) {
+  const p = CFG.precios;
+  const ops = [{ cantidad: 1, precio: p.unitario }, ...(p.packs || [])];
+  const mejor = [0];
+  for (let i = 1; i <= cant; i++) {
+    mejor[i] = Infinity;
+    for (const o of ops) if (o.cantidad <= i) mejor[i] = Math.min(mejor[i], mejor[i - o.cantidad] + o.precio);
+  }
+  return mejor[cant];
+}
+
+function el(tag, cls, txt) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (txt != null) e.textContent = txt;
+  return e;
+}
+
+// Recorta la foto del catálogo: encuadre = punto a mostrar, zoom = cuánto acercar.
+function encuadrar(img, pr) {
+  const pos = pr.encuadre || 'center';
+  img.style.objectPosition = pos;
+  if (pr.zoom && pr.zoom !== 1) { img.style.transformOrigin = pos; img.style.transform = `scale(${pr.zoom})`; }
+}
+
+function armarPagina() {
+  const c = CFG, n = c.numeros;
+  document.title = c.tituloPestania || c.titulo;
+  const total = n.hasta - n.desde + 1;
+
+  $('ceja').textContent = `${total} números · ${c.premios.length} ganadores`;
+  $('titulo').textContent = c.titulo;
+  $('titulo-destacado').textContent = c.tituloDestacado || '';
+  $('bajada').textContent = c.bajada || '';
+  $('sello-num').textContent = c.premios.length;
+
+  const p = c.precios;
+  const chips = [el('span', 'precio-chip')];
+  chips[0].append('1 número ', el('strong', '', formatPrecio(p.unitario)));
+  for (const pk of p.packs || []) {
+    const ch = el('span', 'precio-chip destacado');
+    ch.append(`${pk.cantidad} números `, el('strong', '', formatPrecio(pk.precio)));
+    chips.push(ch);
+  }
+  $('precios').replaceChildren(...chips);
+
+  if (c.presentacion) {
+    $('pres-avatar').textContent = (c.presentacion.nombre || '').charAt(0);
+    $('pres-saludo').textContent = c.presentacion.saludo || '';
+    $('pres-texto').textContent = c.presentacion.texto || '';
+    $('presentacion').hidden = false;
+  }
+
+  const primero = c.premios.find(x => x.imagen);
+  if (primero) { $('hero-img').src = primero.imagen; $('hero-img').alt = primero.nombre; encuadrar($('hero-img'), primero); }
+
+  // Premios
+  $('premios').replaceChildren(...c.premios.map(pr => {
+    const card = el('article', 'premio');
+    card.dataset.puesto = pr.puesto;
+    const foto = el('div', 'premio-foto');
+    if (pr.imagen) {
+      const img = el('img');
+      img.src = pr.imagen; img.alt = pr.nombre; img.loading = 'lazy';
+      encuadrar(img, pr);
+      foto.append(img);
+    } else {
+      const ph = el('div', 'foto-pendiente');
+      ph.innerHTML = `<div>${FLOR_SVG}Foto en camino</div>`;
+      foto.append(ph);
+    }
+    const badge = el('span', 'puesto');
+    badge.append(el('i', '', pr.puesto), `${pr.puesto}° premio`);
+    foto.append(badge);
+
+    const info = el('div', 'premio-info');
+    info.append(el('span', 'premio-linea', pr.linea), el('h3', 'premio-nombre', pr.nombre));
+    const ul = el('ul', 'premio-detalle');
+    for (const d of pr.detalle || []) ul.append(el('li', '', d));
+    info.append(ul);
+    if (pr.valor) {
+      const v = el('p', 'premio-valor');
+      v.append('Valor en catálogo ', el('b', '', formatPrecio(pr.valor)));
+      info.append(v);
+    }
+    card.append(foto, info);
+    return card;
+  }));
+
+  // Sorteo y canal
+  $('premios-sub').textContent = c.sorteo.resumen + ' La cabeza se lleva el 1er premio.';
+  $('sorteo-fecha').textContent = c.sorteo.detalle;
+  $('canal-nombre').textContent = c.canal.nombre;
+  $('canal-texto').textContent = c.canal.texto;
+  const link = $('canal-link');
+  if (c.canal.url) link.href = c.canal.url;
+  else { link.removeAttribute('href'); link.textContent = 'Link próximamente'; link.style.opacity = .7; }
+
+  const packTxt = (p.packs || []).map(pk => `${pk.cantidad} por ${formatPrecio(pk.precio)}`).join(' · ');
+  $('numeros-sub').textContent = `Del ${fmtNum(n.desde)} al ${fmtNum(n.hasta)}. ${formatPrecio(p.unitario)} cada uno${packTxt ? ' · ' + packTxt : ''}.`;
+  document.documentElement.style.setProperty('--cols', n.columnas || 10);
+
+  $('footer-org').textContent = c.organiza || '';
+  $('footer-aclaracion').textContent = (c.textos || {}).aclaracion || '';
+  $('app').hidden = false;
+}
+
+// ---------- UI ----------
+function toast(msg, tipo) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + (tipo || '');
+  setTimeout(() => { t.className = 'toast'; }, 3800);
+}
+
+function telefonoValido(t) { return t.replace(/\D/g, '').length >= 8; }
+
+function datos() {
+  return {
+    nombre: $('in-nombre').value.trim(),
+    instagram: $('in-instagram').value.trim().replace(/^@+/, ''),
+    telefono: $('in-telefono').value.trim()
+  };
+}
+
+function actualizarPanel() {
+  const cant = seleccion.length;
+  const d = datos();
+  $('seleccion-vacia').hidden = cant > 0;
+  $('seleccion-llena').hidden = cant === 0;
+  $('barra').classList.toggle('visible', cant > 0);
+  if (cant > 0) {
+    const sorted = [...seleccion].sort((a, b) => a - b);
+    $('tags').replaceChildren(...sorted.map(x => el('span', 'tag', fmtNum(x))));
+    const total = calcularPrecio(cant);
+    const sinPack = cant * CFG.precios.unitario;
+    $('total').textContent = formatPrecio(total);
+    $('ahorro').textContent = total < sinPack ? `Ahorrás ${formatPrecio(sinPack - total)}` : '';
+    $('barra-cant').textContent = cant === 1 ? '1 número' : `${cant} números`;
+    $('barra-total').textContent = formatPrecio(total);
+  }
+  $('btn-pagar').disabled = !(cant && d.nombre && d.instagram && telefonoValido(d.telefono));
+}
+
+['in-nombre', 'in-instagram', 'in-telefono'].forEach(id => $(id).addEventListener('input', actualizarPanel));
+
+function toggleNumero(n) {
+  if ((estados.get(n) || 'libre') !== 'libre') return;
+  const i = seleccion.indexOf(n);
+  if (i === -1) seleccion.push(n); else seleccion.splice(i, 1);
+  renderGrilla();
+  actualizarPanel();
+}
+
+function limpiarSeleccion() { seleccion = []; renderGrilla(); actualizarPanel(); }
+
+function renderGrilla() {
+  const n = CFG.numeros;
+  const frag = document.createDocumentFragment();
+  for (let i = n.desde; i <= n.hasta; i++) {
+    const estado = estados.get(i) || 'libre';
+    const b = el('button', 'num', fmtNum(i));
+    b.type = 'button';
+    if (estado !== 'libre') { b.classList.add(estado); b.disabled = true; }
+    else if (seleccion.includes(i)) b.classList.add('sel');
+    b.setAttribute('aria-label', `Número ${fmtNum(i)} (${seleccion.includes(i) ? 'seleccionado' : estado})`);
+    if (!b.disabled) b.onclick = () => toggleNumero(i);
+    frag.append(b);
+  }
+  $('grilla').replaceChildren(frag);
+}
+
+// ---------- Backend ----------
+function normalizarEstado(e) {
+  const s = String(e || '').trim().toLowerCase();
+  return s === 'reservado' || s === 'vendido' ? s : 'libre';
+}
+
+async function postBackend(body) {
+  const res = await fetch(CFG.backendUrl, {
+    method: 'POST', redirect: 'follow',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+
+async function cargarNumeros() {
+  try {
+    estados = new Map();
+    if (modoDemo) {
+      // Muestra de cómo se ve con ventas: no es real.
+      [3, 7, 12, 21, 28, 33, 45, 50, 64, 77, 81, 90, 99].forEach(x => estados.set(x, 'vendido'));
+      [15, 58].forEach(x => estados.set(x, 'reservado'));
+    } else {
+      const res = await fetch(CFG.backendUrl + '?action=getNumbers', { redirect: 'follow' });
+      const data = await res.json();
+      const lista = Array.isArray(data) ? data : (data.numeros || []);
+      lista.forEach((x, idx) => {
+        const num = x.numero != null && x.numero !== '' ? Number(x.numero) : CFG.numeros.desde + idx;
+        estados.set(num, normalizarEstado(x.estado));
+      });
+    }
+    seleccion = seleccion.filter(x => (estados.get(x) || 'libre') === 'libre');
+    $('loader').hidden = true;
+    $('grilla').hidden = false;
+    renderGrilla();
+    actualizarPanel();
+  } catch (err) {
+    $('loader').textContent = 'Error al cargar los números. Recargá la página.';
+    console.error(err);
+  }
+}
+
+function resetBoton() {
+  $('btn-pagar').innerHTML = '<span class="mp">MP</span> Pagar con Mercado Pago';
+  actualizarPanel();
+}
+
+async function iniciarPago() {
+  const d = datos();
+  if (!d.nombre || !d.instagram || !telefonoValido(d.telefono)) { toast('Completá nombre, Instagram y WhatsApp.', 'error'); return; }
+  if (!seleccion.length) { toast('Elegí al menos un número.', 'error'); return; }
+  if (modoDemo) { toast('Vista previa: todavía no se puede pagar.', 'warning'); return; }
+
+  const btn = $('btn-pagar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="mp">MP</span> Procesando…';
+  try {
+    const reserva = await postBackend({ action: 'reserve', numeros: seleccion, nombre: d.nombre, instagram: d.instagram, telefono: d.telefono });
+    if (!reserva.ok) {
+      toast(reserva.error || 'Ese número ya fue tomado. Elegí otro.', 'error');
+      resetBoton();
+      await cargarNumeros();
+      return;
+    }
+    const pref = await postBackend({ action: 'createPreference', numeros: seleccion, ref: reserva.ref });
+    if (pref.ok && pref.init_point) window.location.href = pref.init_point;
+    else throw new Error(pref.error || 'Error al crear el pago');
+  } catch (err) {
+    toast('Error al conectar. Intentá de nuevo.', 'error');
+    console.error(err);
+    resetBoton();
+  }
+}
+
+async function manejarRetornoMP() {
+  const params = new URLSearchParams(location.search);
+  const status = params.get('status') || params.get('collection_status');
+  if (!status || modoDemo) return;
+  const nums = params.get('nums') || '';
+  const ref = params.get('external_reference') || params.get('ref') || '';
+  const paymentId = params.get('payment_id') || params.get('collection_id') || '';
+  const tx = CFG.textos || {};
+  history.replaceState({}, '', location.pathname);
+
+  if (status === 'approved') {
+    try { if (paymentId) await postBackend({ action: 'confirm', payment_id: paymentId, ref }); } catch (e) { console.error(e); }
+    const numsTxt = nums.split(',').filter(Boolean).map(x => fmtNum(Number(x))).join(', ');
+    $('modal-titulo').textContent = tx.exitoTitulo || '¡Pago confirmado!';
+    $('modal-texto').textContent = (tx.exitoTexto || 'Tus números {nums} quedaron registrados.').replaceAll('{nums}', numsTxt);
+    $('modal').classList.add('visible');
+  } else if (status === 'failure' || status === 'rejected' || status === 'null') {
+    try { if (ref) await postBackend({ action: 'release', ref }); } catch (e) { console.error(e); }
+    toast(tx.pagoFallido || 'El pago no se completó.', 'error');
+  } else if (status === 'pending' || status === 'in_process') {
+    toast(tx.pagoPendiente || 'Pago pendiente.', 'warning');
+  }
+}
+
+(async function init() {
+  try { CFG = await cargarConfig(); }
+  catch (err) {
+    document.body.insertAdjacentHTML('afterbegin', '<p style="padding:4rem 1rem;text-align:center;color:#a5321a">No se pudo cargar la configuración de la rifa.</p>');
+    console.error(err);
+    return;
+  }
+  modoDemo = !CFG.backendUrl;
+  armarPagina();
+  $('aviso-demo').hidden = !modoDemo;
+  await manejarRetornoMP();
+  await cargarNumeros();
+  if (!modoDemo) setInterval(cargarNumeros, 45000);
+})();
+</script>
+</body>
+</html>
