@@ -141,7 +141,7 @@ function crearPreferencia_(b) {
 
   const pref = {
     items: [{
-      title: titulo + ' - Números ' + numeros.map(n => fmtNum_(n, cfg)).join(', '),
+      title: titulo + ' - ' + numeros.map(n => fmtNum_(n, cfg)).join(', '),   // ej: "Natura - 05, 08, 42"
       quantity: 1,
       unit_price: total,
       currency_id: (cfg.precios && cfg.precios.moneda) || 'ARS'
