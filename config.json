@@ -29,7 +29,7 @@
     "unitario": 2500,
     "packs": [{ "cantidad": 3, "precio": 6500 }],
     "moneda": "ARS",
-    "tituloPago": "Rifa Natura de fin de año"
+    "tituloPago": "Natura"
   },
 
   "premios": [
