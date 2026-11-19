@@ -397,7 +397,7 @@ footer p + p { margin-top: 6px; }
   </section>
 
   <section id="numeros">
-    <div class="aviso-demo" id="aviso-demo" hidden>Vista previa: todavía no está conectado el backend. Los números son de muestra y no se puede pagar.</div>
+    <div class="aviso-demo" id="aviso-demo" hidden>La venta todavía no está abierta. Muy pronto vas a poder elegir y pagar tus números.</div>
     <div class="wrap">
       <h2 class="titulo-seccion">Elegí tus <em>números</em></h2>
       <p class="sub-seccion" id="numeros-sub"></p>
@@ -682,9 +682,7 @@ async function cargarNumeros() {
   try {
     estados = new Map();
     if (modoDemo) {
-      // Muestra de cómo se ve con ventas: no es real.
-      [3, 7, 12, 21, 28, 33, 45, 50, 64, 77, 81, 90, 99].forEach(x => estados.set(x, 'vendido'));
-      [15, 58].forEach(x => estados.set(x, 'reservado'));
+      // Sin backend todavía: todos libres.
     } else {
       const res = await fetch(CFG.backendUrl + '?action=getNumbers', { redirect: 'follow' });
       const data = await res.json();
