@@ -660,6 +660,8 @@ function actualizarPanel() {
 function toggleNumero(n) {
   if ((estados.get(n) || 'libre') !== 'libre') return;
   const i = seleccion.indexOf(n);
+  const max = CFG.numeros.maxPorCompra || 10;
+  if (i === -1 && seleccion.length >= max) { toast(`Podés elegir hasta ${max} números por compra.`, 'warning'); return; }
   if (i === -1) seleccion.push(n); else seleccion.splice(i, 1);
   renderGrilla();
   actualizarPanel();

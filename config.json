@@ -25,7 +25,7 @@
     "detalle": "Ganan las dos últimas cifras de los primeros puestos de la Quiniela Nacional Nocturna del día hábil siguiente al cierre: el 1° puesto (la cabeza) se lleva el 1er premio, el 2° puesto el 2do premio, y así hasta el 5°. Si un número se repite o no fue vendido, pasa al puesto siguiente."
   },
 
-  "numeros": { "desde": 0, "hasta": 99, "digitos": 2, "columnas": 10 },
+  "numeros": { "desde": 0, "hasta": 99, "digitos": 2, "columnas": 10, "maxPorCompra": 10 },
 
   "precios": {
     "unitario": 2500,

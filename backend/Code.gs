@@ -150,6 +150,8 @@ function crearPreferencia_(b) {
     back_urls: { success: retorno, failure: retorno, pending: retorno },
     auto_return: 'approved',
     notification_url: webappUrl_(),
+    // Sin Rapipago / Pago Fácil / cajero: esos se pagan días después y la reserva ya venció.
+    payment_methods: { excluded_payment_types: [{ id: 'ticket' }, { id: 'atm' }] },
     expires: true,
     expiration_date_to: Utilities.formatDate(new Date(venceEn_(filas[0].r)), 'America/Argentina/Buenos_Aires', "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
   };
@@ -188,25 +190,26 @@ function procesarPago_(paymentId) {
     const sh = hoja_();
     const filas = filasPorRef_(ref, sh);
     if (!filas.length) {
-      console.warn('Pago aprobado ' + paymentId + ' sin filas con ref ' + ref + '. Revisar a mano.');
+      alerta_('Pago aprobado sin reserva (venció o se liberó). Devolver o asignar números a mano.', pago, ref);
       return { ok: false, error: 'Reserva no encontrada. Escribinos por WhatsApp.' };
     }
 
     const cfg = config_();
     const esperado = calcularPrecio_(filas.length, cfg.precios);
     if (Number(pago.transaction_amount) + 0.01 < esperado) {
-      console.warn('Monto incorrecto en pago ' + paymentId + ': ' + pago.transaction_amount + ' < ' + esperado);
+      alerta_('Monto menor al esperado ($' + esperado + '). No se marcó como vendido.', pago, ref);
       return { ok: false, error: 'Monto incorrecto. Revisar a mano.' };
     }
 
     const ahora = new Date();
     const numeros = [];
+    const pisados = [];
     filas.forEach(f => {
       const est = normEstado_(f.r[C.estado]);
       const pidPrevio = String(f.r[C.payment_id] || '');
       if (est === 'vendido' && pidPrevio && pidPrevio !== paymentId) {
         // Otro pago ya se quedó con este número: no pisamos.
-        console.warn('Número ' + f.r[C.numero] + ' ya vendido con otro pago (' + pidPrevio + ').');
+        pisados.push(fmtNum_(f.r[C.numero], cfg) + ' (pago ' + pidPrevio + ')');
         return;
       }
       sh.getRange(f.fila, C.estado + 1).setValue('vendido');
@@ -215,6 +218,7 @@ function procesarPago_(paymentId) {
       sh.getRange(f.fila, C.actualizado + 1).setValue(ahora);
       numeros.push(Number(f.r[C.numero]));
     });
+    if (pisados.length) alerta_('Números ya vendidos con otro pago: ' + pisados.join(', ') + '. Devolver la parte que corresponda.', pago, ref);
     return { ok: true, numeros: numeros };
   });
 }
@@ -383,7 +387,8 @@ function validarNumeros_(lista) {
   const cfg = config_();
   const desde = Number(cfg.numeros.desde), hasta = Number(cfg.numeros.hasta);
   const nums = [...new Set(lista.map(Number))];
-  if (nums.length > 50) throw publico_('Demasiados números en una sola compra.');
+  const max = maxPorCompra_(cfg);
+  if (nums.length > max) throw publico_('Podés comprar hasta ' + max + ' números por vez.');
   nums.forEach(n => {
     if (!Number.isInteger(n) || n < desde || n > hasta) throw publico_('Número inválido: ' + n);
   });
@@ -401,6 +406,36 @@ function limpiarTelefono_(s) {
   const digitos = txt.replace(/\D/g, '');
   if (digitos.length < 8 || digitos.length > 15) return '';
   return (txt.charAt(0) === '+' ? '+' : '') + digitos;
+}
+
+function maxPorCompra_(cfg) {
+  return Number(cfg.numeros && cfg.numeros.maxPorCompra) || 10;
+}
+
+/**
+ * Anota un pago que hay que revisar a mano en la pestaña "Alertas" de la misma planilla.
+ * No repite la misma alerta para el mismo pago (el webhook y el retorno llaman dos veces).
+ */
+function alerta_(motivo, pago, ref) {
+  console.warn('ALERTA pago ' + pago.id + ': ' + motivo);
+  try {
+    const ss = SpreadsheetApp.openById(prop_('SHEET_ID', true));
+    let sh = ss.getSheetByName('Alertas');
+    if (!sh) {
+      sh = ss.insertSheet('Alertas');
+      sh.appendRow(['fecha', 'payment_id', 'monto', 'pagador', 'ref', 'motivo']);
+      sh.setFrozenRows(1);
+      sh.getRange(1, 1, 1, 6).setFontWeight('bold');
+    }
+    const pid = String(pago.id || '');
+    const n = sh.getLastRow() - 1;
+    if (n > 0 && sh.getRange(2, 2, n, 6).getValues().some(r => String(r[0]).replace(/^'/, '') === pid && r[4] === motivo)) return;
+    const payer = pago.payer || {};
+    const quien = limpiarTexto_([payer.first_name, payer.last_name].filter(Boolean).join(' ') + (payer.email ? ' <' + payer.email + '>' : ''), 120);
+    sh.appendRow([new Date(), "'" + pid, Number(pago.transaction_amount) || '', quien, ref, motivo]);
+  } catch (e) {
+    console.error('No pude anotar la alerta: ' + e);
+  }
 }
 
 function conLock_(fn) {
