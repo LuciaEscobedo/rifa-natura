@@ -9,7 +9,9 @@
   "presentacion": {
     "nombre": "Luchy",
     "saludo": "¡Hola! Soy Luchy, tu consultora Natura Digital.",
-    "texto": "Armé esta rifa para despedir el año con regalos lindos. ¡Gracias por sumarte!"
+    "texto": "Armé esta rifa para despedir el año con regalos lindos. ¡Gracias por sumarte!",
+    "tiendaTexto": "Visitá mi tienda online",
+    "tiendaUrl": "https://www.naturacosmeticos.com.ar/consultoria/luchicn"
   },
 
   "canal": {

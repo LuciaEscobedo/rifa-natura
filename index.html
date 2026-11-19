@@ -121,6 +121,15 @@ body::before {
 }
 .pres-saludo { font-weight: 700; color: var(--ciruela); font-size: 0.95rem; line-height: 1.3; }
 .pres-texto { font-size: 0.85rem; color: var(--suave); line-height: 1.4; margin-top: 2px; }
+.pres-tienda {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 8px;
+  font-size: 0.85rem; font-weight: 700; color: var(--naranja-hondo);
+  text-decoration: none; border-bottom: 1.5px solid currentColor; padding-bottom: 1px;
+}
+.pres-tienda:hover { color: var(--naranja); }
+.pres-tienda::after { content: '→'; transition: transform .15s; }
+.pres-tienda:hover::after { transform: translateX(3px); }
+footer a { color: var(--naranja-hondo); font-weight: 700; text-decoration: none; }
 
 /* ---------- Secciones ---------- */
 section { padding: 40px 0; }
@@ -351,7 +360,7 @@ footer p + p { margin-top: 6px; }
         <p class="bajada" id="bajada"></p>
         <div class="presentacion" id="presentacion" hidden>
           <span class="avatar" id="pres-avatar"></span>
-          <div><p class="pres-saludo" id="pres-saludo"></p><p class="pres-texto" id="pres-texto"></p></div>
+          <div><p class="pres-saludo" id="pres-saludo"></p><p class="pres-texto" id="pres-texto"></p><a class="pres-tienda" id="pres-tienda" target="_blank" rel="noopener" hidden></a></div>
         </div>
         <div class="precios" id="precios"></div>
         <a class="btn btn-primario" href="#numeros">Elegir mis números
@@ -449,6 +458,7 @@ footer p + p { margin-top: 6px; }
   <footer>
     <div class="wrap">
       <p id="footer-org"></p>
+      <p id="footer-tienda" hidden></p>
       <p id="footer-aclaracion"></p>
       <p>Pagos procesados por Mercado Pago · Argentina</p>
     </div>
@@ -541,6 +551,16 @@ function armarPagina() {
     $('pres-avatar').textContent = (c.presentacion.nombre || '').charAt(0);
     $('pres-saludo').textContent = c.presentacion.saludo || '';
     $('pres-texto').textContent = c.presentacion.texto || '';
+    if (c.presentacion.tiendaUrl) {
+      const t = $('pres-tienda');
+      t.href = c.presentacion.tiendaUrl;
+      t.textContent = c.presentacion.tiendaTexto || 'Mi tienda online';
+      t.hidden = false;
+      const f = el('a', '', c.presentacion.tiendaTexto || 'Mi tienda online');
+      f.href = c.presentacion.tiendaUrl; f.target = '_blank'; f.rel = 'noopener';
+      $('footer-tienda').replaceChildren(f);
+      $('footer-tienda').hidden = false;
+    }
     $('presentacion').hidden = false;
   }
 
